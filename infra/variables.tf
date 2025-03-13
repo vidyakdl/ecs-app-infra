@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 data "aws_ecr_image" "app_image" {
-  repository_name = var.app_name
+  repository_name = "test-app"
   image_tag       = "latest"
 }
 
