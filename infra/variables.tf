@@ -1,9 +1,5 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_ecr_repository" "ecs_app" {
-  name = "ecs-app"
-}
-
 data "aws_region" "current" {}
 
 variable "app_name" {

@@ -31,7 +31,7 @@ This repository contains the infrastructure code to deploy a simple Python appli
    This will create all necessary AWS resources, such as ECS clusters, load balancers, and networking components.
 
 ### 5. **Build and Deploy Docker Image to ECS**
-   - Once the infrastructure is provisioned, GitHub Actions will automatically build the Docker image and deploy it to the ECS cluster.
+   - Once the infrastructure is provisioned, GitHub Actions will automatically build the Docker image and deploy it to the ECS cluster on every commit to main branch.
    
 ## How to Test
 
@@ -51,9 +51,6 @@ After the infrastructure and application are deployed:
 
 3. **Implement Auto-Scaling for ECS Tasks**
    - Consider implementing auto-scaling for ECS tasks based on CPU or memory utilization to improve scalability and cost efficiency.
-
-4. **Add Health Checks and Monitoring**
-   - Set up proper health checks for ECS tasks and integrate with CloudWatch for monitoring application health and performance.
 
 5. **Improve CI/CD Pipeline**
    - Enhance the GitHub Actions workflow by adding tests, linting, and security checks before deployment.
