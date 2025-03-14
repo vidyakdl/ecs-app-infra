@@ -39,8 +39,8 @@ jobs:
 
       - name: Update ECS service
         env:
-          CLUSTER_NAME: your-cluster-name
-          SERVICE_NAME: your-service-name
+          CLUSTER_NAME: apps
+          SERVICE_NAME: lkwd-test-app
           IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
         run: |
           aws ecs update-service \
@@ -50,7 +50,7 @@ jobs:
 
       - name: Verify deployment
         env:
-          CLUSTER_NAME: your-cluster-name
-          SERVICE_NAME: your-service-name
+          CLUSTER_NAME: apps
+          SERVICE_NAME: lkwd-test-app
         run: |
           aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME
