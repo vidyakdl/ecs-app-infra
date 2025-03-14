@@ -20,7 +20,7 @@ This repository contains the infrastructure code to deploy a simple Python appli
    - Before running Terraform, ensure that you update the S3 bucket name for storing Terraform state files. You can modify the S3 bucket name in the `providers.tf` file located in the `infra` folder.
 
 ### 4. **Deploy Infrastructure**
-   - Navigate to the `infra` folder and run the following Terraform commands to deploy your infrastructure:
+   - Navigate to the infra folder and run the following Terraform commands to deploy your infrastructure. If the specified CIDR block is not available, update the variables.tf file with the correct VPC and subnet CIDR.
    
      ```bash
      cd infra
