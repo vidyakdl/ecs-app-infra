@@ -40,61 +40,6 @@ resource "aws_route_table_association" "subnet_apps_a_association" {
   route_table_id = aws_route_table.subnet_route_table_apps.id
 }
 
-# private Subnets
-
-resource "aws_subnet" "subnet_dbs_a" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.subnet_cidr_dbs_a
-  availability_zone = "${var.region}a"
-
-  tags = {
-    Name = "main-dbs-a"
-  }
-}
-
-resource "aws_subnet" "subnet_dbs_b" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.subnet_cidr_dbs_b
-  availability_zone = "${var.region}b"
-
-  tags = {
-    Name = "main-dbs-b"
-  }
-}
-
-resource "aws_subnet" "subnet_dbs_c" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.subnet_cidr_dbs_c
-  availability_zone = "${var.region}c"
-
-  tags = {
-    Name = "main-dbs-c"
-  }
-}
-
-resource "aws_route_table" "subne_route_table_dbs" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "main-dbs"
-  }
-}
-
-resource "aws_route_table_association" "subnet_dbs_a_association" {
-  subnet_id      = aws_subnet.subnet_dbs_a.id
-  route_table_id = aws_route_table.subne_route_table_dbs.id
-}
-
-resource "aws_route_table_association" "subnet_dbs_b_association" {
-  subnet_id      = aws_subnet.subnet_dbs_b.id
-  route_table_id = aws_route_table.subne_route_table_dbs.id
-}
-
-resource "aws_route_table_association" "subnet_dbs_c_association" {
-  subnet_id      = aws_subnet.subnet_dbs_c.id
-  route_table_id = aws_route_table.subne_route_table_dbs.id
-}
-
 # Public subnets
 
 resource "aws_subnet" "subnet_public_a" {
@@ -189,39 +134,21 @@ resource "aws_network_acl" "public" {
   vpc_id = aws_vpc.main.id
 
   egress {
-    protocol   = "tcp"
+    protocol   = "-1" # Allow all protocols (TCP, UDP, ICMP, etc.)
     rule_no    = 100
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  egress {
-    protocol   = "tcp"
-    rule_no    = 900
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+    cidr_block = "0.0.0.0/0" # Allow traffic to all destinations
+    from_port  = 0
+    to_port    = 0 # Allow all port ranges
   }
 
   ingress {
-    protocol   = "tcp"
-    rule_no    = 110
+    protocol   = "-1" # Allow all protocols (TCP, UDP, ICMP, etc.)
+    rule_no    = 100
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 900
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+    cidr_block = "0.0.0.0/0" # Allow traffic from all sources
+    from_port  = 0
+    to_port    = 0 # Allow all port ranges
   }
 
   tags = {
@@ -233,48 +160,21 @@ resource "aws_network_acl" "private" {
   vpc_id = aws_vpc.main.id
 
   egress {
-    protocol   = "tcp"
+    protocol   = "-1" # Allow all protocols (TCP, UDP, ICMP, etc.)
     rule_no    = 100
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 5000
-  }
-
-  egress {
-    protocol   = "tcp"
-    rule_no    = 110
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  egress {
-    protocol   = "tcp"
-    rule_no    = 900
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+    cidr_block = "0.0.0.0/0" # Allow traffic to all destinations
+    from_port  = 0
+    to_port    = 0 # Allow all port ranges
   }
 
   ingress {
-    protocol   = "tcp"
-    rule_no    = 110
+    protocol   = "-1" # Allow all protocols (TCP, UDP, ICMP, etc.)
+    rule_no    = 100
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 900
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+    cidr_block = "0.0.0.0/0" # Allow traffic from all sources
+    from_port  = 0
+    to_port    = 0 # Allow all port ranges
   }
 
   tags = {
@@ -286,22 +186,6 @@ resource "aws_network_acl_association" "subnet_apps_a_association" {
   network_acl_id = aws_network_acl.private.id
   subnet_id      = aws_subnet.subnet_apps_a.id
 }
-
-resource "aws_network_acl_association" "subnet_dbs_a_association" {
-  network_acl_id = aws_network_acl.private.id
-  subnet_id      = aws_subnet.subnet_dbs_a.id
-}
-
-resource "aws_network_acl_association" "subnet_dbs_b_association" {
-  network_acl_id = aws_network_acl.private.id
-  subnet_id      = aws_subnet.subnet_dbs_b.id
-}
-
-resource "aws_network_acl_association" "subnet_dbs_c_association" {
-  network_acl_id = aws_network_acl.private.id
-  subnet_id      = aws_subnet.subnet_dbs_c.id
-}
-
 
 resource "aws_network_acl_association" "subnet_public_a_association" {
   network_acl_id = aws_network_acl.public.id

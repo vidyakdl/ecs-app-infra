@@ -35,7 +35,6 @@ resource "aws_ecs_task_definition" "test_app" {
 
   container_definitions = jsonencode([
     {
-      command   = ["/app"]
       name      = "app"
       image     = data.aws_ecr_image.app_image.image_uri
       cpu       = 256
@@ -57,16 +56,15 @@ resource "aws_ecs_task_definition" "test_app" {
       ]
     }
   ])
-  cpu                      = 256
+  cpu                      = 512
   execution_role_arn       = aws_iam_role.task_role.arn
   family                   = var.app_name
-  memory                   = 512
+  memory                   = 1024
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   tags = {
     Name = var.app_name
   }
-  task_role_arn = aws_iam_role.task_role.arn
 }
 
 resource "aws_ecs_service" "test_app" {
@@ -88,5 +86,6 @@ resource "aws_ecs_service" "test_app" {
   network_configuration {
     security_groups = [aws_security_group.test_app.id]
     subnets         = [aws_subnet.subnet_apps_a.id]
+    assign_public_ip = true 
   }
 }
