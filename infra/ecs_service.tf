@@ -32,11 +32,13 @@ resource "aws_security_group" "test_app" {
 }
 
 resource "aws_ecs_task_definition" "test_app" {
+  depends_on = [aws_ecr_repository.ecs_app]
 
   container_definitions = jsonencode([
     {
       name      = "app"
-      image     = data.aws_ecr_image.app_image.image_uri
+      image     = "${data.aws_ecr_repository.ecs_app.repository_url}:latest"
+
       cpu       = 256
       memory    = 512
       essential = true,
@@ -69,10 +71,10 @@ resource "aws_ecs_task_definition" "test_app" {
 
 resource "aws_ecs_service" "test_app" {
   cluster         = aws_ecs_cluster.apps.id
-  desired_count   = 1
+  desired_count   = 2
   launch_type     = "FARGATE"
   name            = var.app_name
-  task_definition = aws_ecs_task_definition.test_app.arn
+  task_definition = "${aws_ecs_task_definition.test_app.family}:${aws_ecs_task_definition.test_app.revision}"
   tags = {
     Name = var.app_name
   }

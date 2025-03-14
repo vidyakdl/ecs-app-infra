@@ -1,8 +1,7 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_ecr_image" "app_image" {
-  repository_name = "test-app"
-  image_tag       = "latest"
+data "aws_ecr_repository" "ecs_app" {
+  name = "ecs-app"
 }
 
 data "aws_region" "current" {}
